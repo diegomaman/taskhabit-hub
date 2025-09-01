@@ -101,7 +101,7 @@ const Projects = () => {
       completedTasks: 5,
       lastUpdate: "5 hours ago"
     }
-  ]
+  ])
 
   const handleNewProject = () => {
     toast({
