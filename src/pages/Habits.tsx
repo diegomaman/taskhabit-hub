@@ -11,9 +11,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { useToast } from "@/hooks/use-toast"
 
 const Habits = () => {
-  const [habits] = useState([
+  const { toast } = useToast()
+  const [habits, setHabits] = useState([
     {
       id: 1,
       name: "Morning Exercise",
@@ -71,8 +73,30 @@ const Habits = () => {
   }
 
   const toggleHabit = (habitId: number) => {
-    // Toggle habit completion logic would go here
-    console.log(`Toggle habit ${habitId}`)
+    const habit = habits.find(h => h.id === habitId)
+    if (!habit) return
+    
+    setHabits(prev => prev.map(h => 
+      h.id === habitId 
+        ? { ...h, completedToday: !h.completedToday, streak: !h.completedToday ? h.streak + 1 : Math.max(0, h.streak - 1) }
+        : h
+    ))
+    
+    const newStatus = !habit.completedToday
+    toast({
+      title: newStatus ? "Habit completed! 🎉" : "Habit unmarked",
+      description: newStatus 
+        ? `Great job completing "${habit.name}"! Current streak: ${habit.streak + 1} days` 
+        : `"${habit.name}" has been unmarked for today.`,
+    })
+  }
+
+  const handleNewHabit = () => {
+    toast({
+      title: "New Habit",
+      description: "Opening habit creation form...",
+    })
+    // New habit functionality would go here
   }
 
   const getDaysOfWeek = () => {
@@ -92,7 +116,10 @@ const Habits = () => {
           <h1 className="text-3xl font-bold text-foreground">Habits</h1>
           <p className="text-muted-foreground mt-1">Build consistent daily routines and track your progress</p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow">
+        <Button 
+          onClick={handleNewHabit}
+          className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+        >
           <Plus className="w-4 h-4 mr-2" />
           New Habit
         </Button>

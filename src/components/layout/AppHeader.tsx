@@ -11,8 +11,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { ThemeToggle } from "../theme/ThemeToggle"
 
 export function AppHeader() {
+  const handleQuickAdd = () => {
+    console.log("Opening quick add modal")
+    // Quick add functionality would go here
+  }
+
   return (
     <header className="h-16 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
       <div className="flex items-center justify-between h-full px-6">
@@ -33,11 +39,15 @@ export function AppHeader() {
           {/* Quick Add Button */}
           <Button 
             size="sm" 
+            onClick={handleQuickAdd}
             className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow transition-all duration-200 hover:shadow-medium"
           >
             <Plus className="w-4 h-4 mr-2" />
             Quick Add
           </Button>
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
 
           {/* Notifications */}
           <DropdownMenu>
@@ -49,7 +59,7 @@ export function AppHeader() {
                 </Badge>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuContent align="end" className="w-80 bg-background border border-border shadow-medium">
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="flex flex-col items-start space-y-1 p-3">
@@ -79,7 +89,7 @@ export function AppHeader() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuContent className="w-56 bg-background border border-border shadow-medium" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">John Doe</p>

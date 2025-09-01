@@ -20,8 +20,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useToast } from "@/hooks/use-toast"
 
 const Tasks = () => {
+  const { toast } = useToast()
   const [columns, setColumns] = useState({
     todo: [
       {
@@ -111,6 +113,48 @@ const Tasks = () => {
     ]
   })
 
+  const handleNewTask = () => {
+    toast({
+      title: "New Task",
+      description: "Opening task creation form...",
+    })
+    // New task functionality would go here
+  }
+
+  const handleEditTask = (taskId: number, taskTitle: string) => {
+    toast({
+      title: "Edit Task",
+      description: `Opening editor for "${taskTitle}"...`,
+    })
+    // Edit task functionality would go here
+  }
+
+  const handleDuplicateTask = (taskId: number, taskTitle: string) => {
+    toast({
+      title: "Task duplicated! 📋",
+      description: `"${taskTitle}" has been duplicated.`,
+    })
+    // Duplicate task functionality would go here
+  }
+
+  const handleDeleteTask = (taskId: number, taskTitle: string) => {
+    toast({
+      title: "Task deleted",
+      description: `"${taskTitle}" has been moved to trash.`,
+      variant: "destructive",
+    })
+    // Delete task functionality would go here
+  }
+
+  const handleAddTaskToColumn = (columnKey: string) => {
+    const columnName = columnTitles[columnKey as keyof typeof columnTitles]
+    toast({
+      title: "Add Task",
+      description: `Creating new task in "${columnName}" column...`,
+    })
+    // Add task to specific column functionality would go here
+  }
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high": return "text-priority-high"
@@ -149,10 +193,15 @@ const Tasks = () => {
                 <MoreHorizontal className="w-3 h-3" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>Duplicate</DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+            <DropdownMenuContent align="end" className="bg-background border border-border shadow-medium">
+              <DropdownMenuItem onClick={() => handleEditTask(task.id, task.title)}>Edit</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDuplicateTask(task.id, task.title)}>Duplicate</DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => handleDeleteTask(task.id, task.title)}
+                className="text-destructive focus:text-destructive"
+              >
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -209,7 +258,10 @@ const Tasks = () => {
           <h1 className="text-3xl font-bold text-foreground">Tasks</h1>
           <p className="text-muted-foreground mt-1">Organize and track your work with Kanban boards</p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow">
+        <Button 
+          onClick={handleNewTask}
+          className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+        >
           <Plus className="w-4 h-4 mr-2" />
           New Task
         </Button>
@@ -257,6 +309,7 @@ const Tasks = () => {
                   <Button 
                     variant="ghost" 
                     className="w-full border-2 border-dashed border-muted-foreground/20 hover:border-muted-foreground/40 hover:bg-muted/50 transition-all duration-200"
+                    onClick={() => handleAddTaskToColumn(columnKey)}
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Task

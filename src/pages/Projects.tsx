@@ -23,11 +23,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useToast } from "@/hooks/use-toast"
 
 const Projects = () => {
+  const { toast } = useToast()
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-
-  const projects = [
+  const [projects, setProjects] = useState([
     {
       id: 1,
       name: "Website Redesign",
@@ -102,6 +103,36 @@ const Projects = () => {
     }
   ]
 
+  const handleNewProject = () => {
+    toast({
+      title: "New Project",
+      description: "Opening project creation form...",
+    })
+    // New project functionality would go here
+  }
+
+  const handleStarProject = (projectId: number, projectName: string) => {
+    setProjects(prev => prev.map(p => 
+      p.id === projectId ? { ...p, starred: !p.starred } : p
+    ))
+    
+    const project = projects.find(p => p.id === projectId)
+    const isStarring = !project?.starred
+    
+    toast({
+      title: isStarring ? "Project starred! ⭐" : "Project unstarred",
+      description: `"${projectName}" has been ${isStarring ? "added to" : "removed from"} your favorites.`,
+    })
+  }
+
+  const handleArchiveProject = (projectId: number, projectName: string) => {
+    toast({
+      title: "Project archived",
+      description: `"${projectName}" has been moved to archives.`,
+    })
+    // Archive functionality would go here
+  }
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high": return "bg-priority-high text-white"
@@ -128,7 +159,10 @@ const Projects = () => {
           <h1 className="text-3xl font-bold text-foreground">Projects</h1>
           <p className="text-muted-foreground mt-1">Manage and track your project progress</p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow">
+        <Button 
+          onClick={handleNewProject}
+          className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+        >
           <Plus className="w-4 h-4 mr-2" />
           New Project
         </Button>
@@ -195,12 +229,12 @@ const Projects = () => {
                         <MoreHorizontal className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
+                    <DropdownMenuContent align="end" className="bg-background border border-border shadow-medium">
+                      <DropdownMenuItem onClick={() => handleStarProject(project.id, project.name)}>
                         <Star className="w-4 h-4 mr-2" />
-                        Favorite
+                        {projects.find(p => p.id === project.id)?.starred ? "Unstar" : "Favorite"}
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleArchiveProject(project.id, project.name)}>
                         <Archive className="w-4 h-4 mr-2" />
                         Archive
                       </DropdownMenuItem>
@@ -317,12 +351,12 @@ const Projects = () => {
                         <MoreHorizontal className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
+                    <DropdownMenuContent align="end" className="bg-background border border-border shadow-medium">
+                      <DropdownMenuItem onClick={() => handleStarProject(project.id, project.name)}>
                         <Star className="w-4 h-4 mr-2" />
-                        Favorite
+                        {projects.find(p => p.id === project.id)?.starred ? "Unstar" : "Favorite"}
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleArchiveProject(project.id, project.name)}>
                         <Archive className="w-4 h-4 mr-2" />
                         Archive
                       </DropdownMenuItem>

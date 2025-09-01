@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { 
   FolderOpen, 
   CheckSquare, 
@@ -11,8 +12,35 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import { useToast } from "@/hooks/use-toast"
+import { useNavigate } from "react-router-dom"
 
 const Dashboard = () => {
+  const { toast } = useToast()
+  const navigate = useNavigate()
+
+  const handleViewAnalytics = () => {
+    toast({
+      title: "Analytics",
+      description: "Opening analytics dashboard...",
+    })
+    // Analytics functionality would go here
+  }
+
+  const handleViewAllProjects = () => {
+    navigate("/projects")
+  }
+
+  const handleViewAllTasks = () => {
+    navigate("/tasks")
+  }
+
+  const handleCompleteTask = (taskName: string) => {
+    toast({
+      title: "Task completed! 🎉",
+      description: `"${taskName}" has been marked as complete.`,
+    })
+  }
   const stats = [
     {
       title: "Active Projects",
@@ -104,7 +132,10 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
           <p className="text-muted-foreground mt-1">Welcome back! Here's what's happening today.</p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow">
+        <Button 
+          onClick={handleViewAnalytics}
+          className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+        >
           <TrendingUp className="w-4 h-4 mr-2" />
           View Analytics
         </Button>
@@ -169,7 +200,11 @@ const Dashboard = () => {
                 </div>
               </div>
             ))}
-            <Button variant="outline" className="w-full mt-4">
+            <Button 
+              variant="outline" 
+              className="w-full mt-4"
+              onClick={handleViewAllProjects}
+            >
               View All Projects
             </Button>
           </CardContent>
@@ -191,12 +226,20 @@ const Dashboard = () => {
                   <h4 className="font-medium text-foreground">{task.name}</h4>
                   <p className="text-sm text-muted-foreground">{task.project}</p>
                 </div>
-                <Button variant="ghost" size="sm">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => handleCompleteTask(task.name)}
+                >
                   <CheckSquare className="w-4 h-4" />
                 </Button>
               </div>
             ))}
-            <Button variant="outline" className="w-full mt-4">
+            <Button 
+              variant="outline" 
+              className="w-full mt-4"
+              onClick={handleViewAllTasks}
+            >
               View All Tasks
             </Button>
           </CardContent>
