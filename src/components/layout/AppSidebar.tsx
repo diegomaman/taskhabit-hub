@@ -107,18 +107,14 @@ export function AppSidebar() {
 
         {/* Collapse button */}
         <div className={`mt-auto p-2 ${isCollapsed ? "flex justify-center" : ""}`}>
-          <SidebarTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className={`
-                ${isCollapsed ? "w-10 h-10 p-0" : "w-full justify-start"} 
-                hover:bg-sidebar-accent transition-colors duration-200
-              `}
-            >
+          <SidebarTrigger className={`
+            ${isCollapsed ? "w-10 h-10 p-0" : "w-full justify-start"} 
+            hover:bg-sidebar-accent transition-colors duration-200
+          `}>
+            <div className="flex items-center gap-2">
               <ChevronLeft className={`w-4 h-4 transition-transform duration-200 ${isCollapsed ? "rotate-180" : ""}`} />
               {!isCollapsed && <span className="ml-2">Collapse</span>}
-            </Button>
+            </div>
           </SidebarTrigger>
         </div>
       </SidebarContent>
