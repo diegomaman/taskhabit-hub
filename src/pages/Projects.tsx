@@ -46,7 +46,8 @@ const Projects = () => {
       tags: ["Web", "Design", "Frontend"],
       tasksCount: 24,
       completedTasks: 18,
-      lastUpdate: "2 hours ago"
+      lastUpdate: "2 hours ago",
+      starred: false
     },
     {
       id: 2,
@@ -64,7 +65,8 @@ const Projects = () => {
       tags: ["Mobile", "React Native", "Backend"],
       tasksCount: 32,
       completedTasks: 14,
-      lastUpdate: "1 day ago"
+      lastUpdate: "1 day ago",
+      starred: false
     },
     {
       id: 3,
@@ -81,7 +83,8 @@ const Projects = () => {
       tags: ["Design", "Branding"],
       tasksCount: 15,
       completedTasks: 13,
-      lastUpdate: "3 hours ago"
+      lastUpdate: "3 hours ago",
+      starred: true
     },
     {
       id: 4,
@@ -99,7 +102,8 @@ const Projects = () => {
       tags: ["Marketing", "Strategy"],
       tasksCount: 20,
       completedTasks: 5,
-      lastUpdate: "5 hours ago"
+      lastUpdate: "5 hours ago",
+      starred: false
     }
   ])
 
