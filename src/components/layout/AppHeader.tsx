@@ -1,4 +1,4 @@
-import { Search, Plus, Bell, User } from "lucide-react"
+import { Search, Plus, Bell, User, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -12,11 +12,28 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "../theme/ThemeToggle"
+import { NewProjectDialog } from "../dialogs/NewProjectDialog"
+import { useAuth } from "../auth/AuthProvider"
+import { useToast } from "@/hooks/use-toast"
 
 export function AppHeader() {
-  const handleQuickAdd = () => {
-    console.log("Opening quick add modal")
-    // Quick add functionality would go here
+  const { user, signOut } = useAuth()
+  const { toast } = useToast()
+
+  const handleSignOut = async () => {
+    try {
+      await signOut()
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out"
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out",
+        variant: "destructive"
+      })
+    }
   }
 
   return (
@@ -37,14 +54,7 @@ export function AppHeader() {
         {/* Right side actions */}
         <div className="flex items-center gap-3 ml-6">
           {/* Quick Add Button */}
-          <Button 
-            size="sm" 
-            onClick={handleQuickAdd}
-            className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow transition-all duration-200 hover:shadow-medium"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Quick Add
-          </Button>
+          <NewProjectDialog />
 
           {/* Theme Toggle */}
           <ThemeToggle />
@@ -92,9 +102,11 @@ export function AppHeader() {
             <DropdownMenuContent className="w-56 bg-background border border-border shadow-medium" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">John Doe</p>
+                  <p className="text-sm font-medium leading-none">
+                    {user?.user_metadata?.full_name || "User"}
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    john@example.com
+                    {user?.email}
                   </p>
                 </div>
               </DropdownMenuLabel>
@@ -107,7 +119,8 @@ export function AppHeader() {
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
+                <LogOut className="mr-2 h-4 w-4" />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>

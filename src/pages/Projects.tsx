@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { 
   Plus, 
   Grid3X3, 
@@ -24,10 +24,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useToast } from "@/hooks/use-toast"
+import { NewProjectDialog } from "@/components/dialogs/NewProjectDialog"
 
 const Projects = () => {
   const { toast } = useToast()
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [searchQuery, setSearchQuery] = useState("")
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -107,12 +109,8 @@ const Projects = () => {
     }
   ])
 
-  const handleNewProject = () => {
-    toast({
-      title: "New Project",
-      description: "Opening project creation form...",
-    })
-    // New project functionality would go here
+  const handleNewProject = (newProject: any) => {
+    setProjects(prev => [newProject, ...prev])
   }
 
   const handleStarProject = (projectId: number, projectName: string) => {
@@ -155,6 +153,20 @@ const Projects = () => {
     }
   }
 
+  // Filter projects based on search query
+  const filteredProjects = useMemo(() => {
+    if (!searchQuery.trim()) return projects
+    
+    const query = searchQuery.toLowerCase()
+    return projects.filter(project => 
+      project.name.toLowerCase().includes(query) ||
+      project.description.toLowerCase().includes(query) ||
+      project.tags.some(tag => tag.toLowerCase().includes(query)) ||
+      project.status.toLowerCase().includes(query) ||
+      project.priority.toLowerCase().includes(query)
+    )
+  }, [projects, searchQuery])
+
   return (
     <div className="p-6 space-y-6 animate-fade-in">
       {/* Header */}
@@ -163,13 +175,7 @@ const Projects = () => {
           <h1 className="text-3xl font-bold text-foreground">Projects</h1>
           <p className="text-muted-foreground mt-1">Manage and track your project progress</p>
         </div>
-        <Button 
-          onClick={handleNewProject}
-          className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          New Project
-        </Button>
+        <NewProjectDialog onProjectCreate={handleNewProject} />
       </div>
 
       {/* Filters and View Toggle */}
@@ -180,6 +186,8 @@ const Projects = () => {
             <Input
               placeholder="Search projects..."
               className="pl-10 bg-muted/50 border-border"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <Button variant="outline" size="sm">
@@ -209,9 +217,18 @@ const Projects = () => {
       </div>
 
       {/* Projects Grid/List */}
-      {viewMode === "grid" ? (
+      {filteredProjects.length === 0 ? (
+        <div className="text-center py-12">
+          <h3 className="text-lg font-semibold text-muted-foreground">
+            {searchQuery ? "No projects found" : "No projects yet"}
+          </h3>
+          <p className="text-sm text-muted-foreground mt-2">
+            {searchQuery ? "Try adjusting your search terms" : "Create your first project to get started"}
+          </p>
+        </div>
+      ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <Card 
               key={project.id} 
               className="hover:shadow-medium transition-all duration-200 cursor-pointer animate-scale-in"
@@ -307,7 +324,7 @@ const Projects = () => {
         </div>
       ) : (
         <div className="space-y-3">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <Card 
               key={project.id} 
               className="hover:shadow-soft transition-all duration-200 cursor-pointer animate-fade-in"
