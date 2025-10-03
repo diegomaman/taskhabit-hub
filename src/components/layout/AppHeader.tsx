@@ -20,20 +20,12 @@ export function AppHeader() {
   const { user, signOut } = useAuth()
   const { toast } = useToast()
 
-  const handleSignOut = async () => {
-    try {
-      await signOut()
-      toast({
-        title: "Signed out",
-        description: "You have been successfully signed out"
-      })
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to sign out",
-        variant: "destructive"
-      })
-    }
+  const handleSignOut = () => {
+    signOut()
+    toast({
+      title: "Sesión cerrada",
+      description: "Has cerrado sesión correctamente"
+    })
   }
 
   return (
@@ -103,7 +95,7 @@ export function AppHeader() {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {user?.user_metadata?.full_name || "User"}
+                    {user?.name || "Usuario"}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user?.email}

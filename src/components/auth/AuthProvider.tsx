@@ -1,47 +1,60 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { User, Session } from '@supabase/supabase-js'
-import { supabase } from '@/integrations/supabase/client'
+
+interface User {
+  id: string
+  email: string
+  name: string
+}
 
 interface AuthContextType {
   user: User | null
-  session: Session | null
   loading: boolean
-  signOut: () => Promise<void>
+  signOut: () => void
+  signIn: (email: string, password: string) => boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+// Credenciales de prueba
+const DEMO_CREDENTIALS = {
+  email: 'demo@clickflow.com',
+  password: 'demo123'
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
+    // Verificar si hay sesión guardada
+    const savedUser = localStorage.getItem('clickflow_user')
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
+    }
+    setLoading(false)
   }, [])
 
-  const signOut = async () => {
-    await supabase.auth.signOut()
+  const signIn = (email: string, password: string) => {
+    if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
+      const userData: User = {
+        id: '1',
+        email: DEMO_CREDENTIALS.email,
+        name: 'Demo User'
+      }
+      setUser(userData)
+      localStorage.setItem('clickflow_user', JSON.stringify(userData))
+      return true
+    }
+    return false
+  }
+
+  const signOut = () => {
+    setUser(null)
+    localStorage.removeItem('clickflow_user')
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signOut, signIn }}>
       {children}
     </AuthContext.Provider>
   )
