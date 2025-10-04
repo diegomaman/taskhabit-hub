@@ -9,7 +9,11 @@ import {
   Calendar,
   FileText,
   Settings,
-  ChevronLeft
+  ChevronLeft,
+  TrendingUp,
+  Users,
+  Layout,
+  Plug
 } from "lucide-react"
 
 import {
@@ -27,14 +31,24 @@ import {
 import { Button } from "@/components/ui/button"
 
 const navigationItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Projects", url: "/projects", icon: FolderOpen },
-  { title: "Tasks", url: "/tasks", icon: CheckSquare },
-  { title: "Habits", url: "/habits", icon: Target },
-  { title: "Notes", url: "/notes", icon: StickyNote },
-  { title: "Calendar", url: "/calendar", icon: Calendar },
-  { title: "Files", url: "/files", icon: FileText },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Dashboard", url: "/", icon: LayoutDashboard, group: "main" },
+  { title: "Projects", url: "/projects", icon: FolderOpen, group: "main" },
+  { title: "Tasks", url: "/tasks", icon: CheckSquare, group: "main" },
+  { title: "Habits", url: "/habits", icon: Target, group: "main" },
+  { title: "Notes", url: "/notes", icon: StickyNote, group: "main" },
+  { title: "Calendar", url: "/calendar", icon: Calendar, group: "main" },
+  { title: "Files", url: "/files", icon: FileText, group: "main" },
+]
+
+const advancedItems = [
+  { title: "Analytics", url: "/analytics", icon: TrendingUp, group: "advanced" },
+  { title: "Team", url: "/team", icon: Users, group: "advanced" },
+  { title: "Templates", url: "/templates", icon: Layout, group: "advanced" },
+  { title: "Integrations", url: "/integrations", icon: Plug, group: "advanced" },
+]
+
+const settingsItems = [
+  { title: "Settings", url: "/settings", icon: Settings, group: "settings" },
 ]
 
 export function AppSidebar() {
@@ -70,16 +84,83 @@ export function AppSidebar() {
           )}
         </div>
 
+        {/* Main Navigation */}
         <SidebarGroup>
           {!isCollapsed && (
             <SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-3 py-2">
-              Navigation
+              Main
             </SidebarGroupLabel>
           )}
           
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {navigationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild
+                    className={`
+                      w-full justify-start rounded-lg transition-all duration-200
+                      ${isCollapsed ? "px-2" : "px-3"}
+                      ${isActive(item.url) 
+                        ? "bg-gradient-primary text-primary-foreground shadow-glow" 
+                        : "hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-accent-foreground"
+                      }
+                    `}
+                  >
+                    <NavLink to={item.url} className="flex items-center gap-3 w-full">
+                      <item.icon className={`${isCollapsed ? "w-5 h-5" : "w-4 h-4"} flex-shrink-0`} />
+                      {!isCollapsed && (
+                        <span className="font-medium">{item.title}</span>
+                      )}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Advanced Features */}
+        <SidebarGroup>
+          {!isCollapsed && (
+            <SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-3 py-2">
+              Advanced
+            </SidebarGroupLabel>
+          )}
+          
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {advancedItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild
+                    className={`
+                      w-full justify-start rounded-lg transition-all duration-200
+                      ${isCollapsed ? "px-2" : "px-3"}
+                      ${isActive(item.url) 
+                        ? "bg-gradient-primary text-primary-foreground shadow-glow" 
+                        : "hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-accent-foreground"
+                      }
+                    `}
+                  >
+                    <NavLink to={item.url} className="flex items-center gap-3 w-full">
+                      <item.icon className={`${isCollapsed ? "w-5 h-5" : "w-4 h-4"} flex-shrink-0`} />
+                      {!isCollapsed && (
+                        <span className="font-medium">{item.title}</span>
+                      )}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Settings */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild

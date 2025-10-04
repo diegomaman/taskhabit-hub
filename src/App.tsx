@@ -14,6 +14,10 @@ import Notes from "./pages/Notes";
 import Calendar from "./pages/Calendar";
 import Files from "./pages/Files";
 import Settings from "./pages/Settings";
+import Analytics from "./pages/Analytics";
+import Team from "./pages/Team";
+import Templates from "./pages/Templates";
+import Integrations from "./pages/Integrations";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -99,6 +103,34 @@ function AppRoutes() {
         <ProtectedRoute>
           <AppLayout>
             <Settings />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/analytics" element={
+        <ProtectedRoute>
+          <AppLayout>
+            <Analytics />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/team" element={
+        <ProtectedRoute>
+          <AppLayout>
+            <Team />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/templates" element={
+        <ProtectedRoute>
+          <AppLayout>
+            <Templates />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/integrations" element={
+        <ProtectedRoute>
+          <AppLayout>
+            <Integrations />
           </AppLayout>
         </ProtectedRoute>
       } />
