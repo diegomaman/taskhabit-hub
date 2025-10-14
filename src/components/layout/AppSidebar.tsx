@@ -13,7 +13,8 @@ import {
   TrendingUp,
   Users,
   Layout,
-  Plug
+  Plug,
+  Book
 } from "lucide-react"
 
 import {
@@ -45,6 +46,7 @@ const advancedItems = [
   { title: "Team", url: "/team", icon: Users, group: "advanced" },
   { title: "Templates", url: "/templates", icon: Layout, group: "advanced" },
   { title: "Integrations", url: "/integrations", icon: Plug, group: "advanced" },
+  { title: "Documentation", url: "/documentation", icon: Book, group: "advanced" },
 ]
 
 const settingsItems = [

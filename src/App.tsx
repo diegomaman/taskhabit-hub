@@ -18,6 +18,7 @@ import Analytics from "./pages/Analytics";
 import Team from "./pages/Team";
 import Templates from "./pages/Templates";
 import Integrations from "./pages/Integrations";
+import Documentation from "./pages/Documentation";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -131,6 +132,13 @@ function AppRoutes() {
         <ProtectedRoute>
           <AppLayout>
             <Integrations />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/documentation" element={
+        <ProtectedRoute>
+          <AppLayout>
+            <Documentation />
           </AppLayout>
         </ProtectedRoute>
       } />
